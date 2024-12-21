@@ -12,7 +12,7 @@ export class ElectronPocComponent {
   constructor(private electronService: ElectronService) {}
 
   ngOnInit() {
-    this.electronService.getAppVersion().then((version) => {
+    this.electronService.getAppVersion().subscribe((version) => {
       console.log('Electron version');
       this.version = version;
     });

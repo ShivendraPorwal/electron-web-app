@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { from } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ElectronService {
-  getAppVersion(): Promise<string> {
-    return window.electron.getAppVersion();
+  getAppVersion() {
+    return from(window.electron.getAppVersion());
   }
 }
