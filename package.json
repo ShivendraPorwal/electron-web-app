@@ -1,21 +1,31 @@
 {
   "name": "angular-electron-app",
   "main": "main.js",
-  "version": "0.0.0",
+  "version": "0.0.9",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "electron": "ng build && electron .",
-    "electron:dev": "concurrently \"npm run start\" \"wait-on http://localhost:4200 && electron .\""
+    "electron:dev": "concurrently \"npm run start\" \"wait-on http://localhost:4200 && electronmon .\"",
+    "electron:publish": "npm run build && electron-builder --publish always",
+    "electron:build": "npm run build && electron-builder"
   },
   "build": {
     "appId": "com.example.angular-electron",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "ShivendraPorwal",
+        "repo": "electron-web-app"
+      }
+    ],
     "files": [
       "dist/**/*",
-      "main.js"
+      "main.js",
+      "preload.js"
     ],
     "win": {
       "target": "nsis"
@@ -31,6 +41,8 @@
     "@angular/platform-browser": "^16.2.0",
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
+    "electron-updater": "^6.3.9",
+    "electronmon": "^2.0.3",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"

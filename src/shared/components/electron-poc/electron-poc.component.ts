@@ -13,8 +13,11 @@ export class ElectronPocComponent {
 
   ngOnInit() {
     this.electronService.getAppVersion().subscribe((version) => {
-      console.log('Electron version');
       this.version = version;
+    });
+
+    this.electronService.getElectronLog().subscribe((logMessage) => {
+      console.log(logMessage);
     });
   }
 }
