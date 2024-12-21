@@ -15,6 +15,10 @@ export class DownloadProgressComponent {
   constructor(private electronService: ElectronService) {}
 
   ngOnInit() {
+    this.initProgress();
+  }
+
+  initProgress = () => {
     // Subscribe to download progress updates
     this.electronService.getDownloadProgress().subscribe((progress) => {
       this.downloadProgress = progress.percent;
@@ -22,5 +26,5 @@ export class DownloadProgressComponent {
       this.total = progress.total;
       this.speed = progress.speed;
     });
-  }
+  };
 }

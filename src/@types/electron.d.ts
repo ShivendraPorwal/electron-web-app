@@ -7,18 +7,18 @@ export type DownloadProgress = {
   speed: number; // KB/s
 };
 
+type TEventCb<TData = any> = (event: string, data: TData) => void;
+
+export type ElectronEventFn = {
+  onLogFromElectron: (callback: TEventCb) => Promise<void>;
+  onDownloadProgress: (callback: TEventCb<DownloadProgress>) => Promise<void>;
+};
+
 declare global {
   interface Window {
-    electron: {
-      removeListener: (event: string) => Promise<void>;
-
+    electron: ElectronEventFn & {
+      removeListener: (event: string, callback: any) => Promise<void>;
       getAppVersion: () => Promise<string>;
-      onLogFromElectron: (
-        callback: (event: string, message: any) => void
-      ) => Promise<void>;
-      onDownloadProgress: (
-        callback: (event: string, data: DownloadProgress) => void
-      ) => Promise<void>;
     };
   }
 }

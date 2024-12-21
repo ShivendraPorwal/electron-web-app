@@ -7,17 +7,26 @@ import { ElectronService } from 'shared/services';
   styleUrls: ['./electron-poc.component.scss'],
 })
 export class ElectronPocComponent {
-  version: string = '';
+  version: string = '123';
 
   constructor(private electronService: ElectronService) {}
 
   ngOnInit() {
-    this.electronService.getAppVersion().subscribe((version) => {
+    this.electronService.appVersion().subscribe((version) => {
       this.version = version;
     });
 
     this.electronService.getElectronLog().subscribe((logMessage) => {
       console.log(logMessage);
     });
+
+    setTimeout(() => {
+      this.version = `v120100`;
+    }, 5000);
+  }
+
+  handle() {
+    console.log('speed', this.version);
+    this.version = `v100`;
   }
 }

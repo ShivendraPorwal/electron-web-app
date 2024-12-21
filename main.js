@@ -188,12 +188,6 @@ const template = [
         label: "Test Menu 2",
         click: () => {
           logToApp("Test Menu 2 clicked");
-          emitEventToApp("download-progress", {
-            percent: `test`,
-            transferred: `test`,
-            total: `test`,
-            speed: `test`,
-          });
         },
       },
     ],
