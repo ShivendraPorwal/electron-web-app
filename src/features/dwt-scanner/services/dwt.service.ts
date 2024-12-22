@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { environment } from './../environments/environment';
+import { environment } from 'env/environment';
 import Dynamsoft from 'dwt';
 import { DynamsoftEnumsDWT } from 'dwt/dist/types/Dynamsoft.Enum';
 import { WebTwain } from 'dwt/dist/types/WebTwain';
