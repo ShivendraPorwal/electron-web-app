@@ -1,11 +1,6 @@
-const {
-  app,
-  BrowserWindow,
-  globalShortcut,
-  ipcMain,
-  dialog,
-} = require("electron");
+const { app, Menu, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
+const fs = require("fs");
 const { autoUpdater } = require("electron-updater");
 
 let mainWindow;
@@ -14,8 +9,8 @@ const isDev = process.env.NODE_ENV === "development" || !app.isPackaged;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1200,
+    height: 800,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"), // Ensure preload.js is in the correct path
       nodeIntegration: false, // Disable nodeIntegration for security
@@ -31,15 +26,21 @@ function createWindow() {
       path.join(__dirname, "dist/angular-electron-app/index.html")
     );
   }
-
-  // ------------------  Listen for a message from the renderer process (Angular) --------------------------------
-
-  ipcMain.handle("get-app-version", () => {
-    console.log("Received message from renderer process", "get-app-version"); // Log message in console
-    logToApp("Getting version information");
-    return app.getVersion(); // Send back app version
-  });
 }
+
+// ------------------  Listen for a message from the renderer process (Angular) --------------------------------
+
+ipcMain.handle("get-app-version", () => {
+  logToApp("Getting version information");
+  return app.getVersion(); // Send back app version
+});
+// Open folder dialog when requested
+ipcMain.handle("dialog:openFolder", async () => {
+  const result = await dialog.showOpenDialog(mainWindow, {
+    properties: ["openDirectory"],
+  });
+  return result.filePaths[0]; // Return the selected folder path
+});
 
 // FIXME: This need to be worked upon and tested
 // TODO: Handle close if download is in progress
@@ -153,9 +154,49 @@ app.whenReady().then(() => {
   });
 });
 
-// --------------- Menu --------------------
+// --------------- Client Folder ----------------
 
-const { Menu } = require("electron");
+function createClientFolder(clientName) {
+  const baseFolder = path.join(app.getPath("userData"), "clients");
+  const clientFolder = path.join(baseFolder, clientName);
+
+  if (!fs.existsSync(baseFolder)) {
+    fs.mkdirSync(baseFolder);
+  }
+
+  if (!fs.existsSync(clientFolder)) {
+    fs.mkdirSync(clientFolder);
+    return `Client folder created for ${clientName}.`;
+  } else {
+    return `Client folder for ${clientName} already exists.`;
+  }
+}
+
+function viewClientFolders() {
+  const baseFolder = path.join(app.getPath("userData"), "clients");
+
+  if (!fs.existsSync(baseFolder)) {
+    return [];
+  }
+
+  return fs
+    .readdirSync(baseFolder, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name);
+}
+
+// IPC Handlers
+ipcMain.handle("create-client-folder", (_event, clientName) => {
+  logToApp("Create client folder");
+  return createClientFolder(clientName);
+});
+
+ipcMain.handle("view-client-folders", () => {
+  logToApp("view client folder");
+  return viewClientFolders();
+});
+
+// --------------- Menu --------------------
 
 const template = [
   {

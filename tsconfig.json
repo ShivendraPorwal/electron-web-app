@@ -22,6 +22,7 @@
     "baseUrl": "./",
     "paths": {
       "shared/*": ["src/shared/*"],
+      "dwt/*": ["src/dwt/*"],
       "types/*": ["src/@types/*"]
     }
   },

@@ -1,1 +1,2 @@
-export { ElectronService } from './electron/electron.service';
+export { ElectronService } from './electron.service';
+export { FolderService } from './folder.service';

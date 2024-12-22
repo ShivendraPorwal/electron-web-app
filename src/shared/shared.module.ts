@@ -1,12 +1,23 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ElectronPocComponent } from './components';
-import { DownloadProgressComponent } from './components/download-progress/download-progress.component';
+import {
+  ElectronPocComponent,
+  FileExplorerComponent,
+  DownloadProgressComponent,
+} from './components';
+
+import { FormsModule } from '@angular/forms';
+
+import { ElectronService, FolderService } from './services';
 
 @NgModule({
-  declarations: [ElectronPocComponent, DownloadProgressComponent],
-  imports: [BrowserModule],
-  providers: [],
+  declarations: [
+    ElectronPocComponent,
+    DownloadProgressComponent,
+    FileExplorerComponent,
+  ],
+  imports: [BrowserModule, FormsModule],
+  providers: [FolderService, ElectronService],
   bootstrap: [],
   exports: [ElectronPocComponent],
 })

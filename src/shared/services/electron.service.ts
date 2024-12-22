@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { from, Observable } from 'rxjs';
-import { DownloadProgress, ElectronEventFn } from 'types/electron';
+import { DownloadProgress, ElectronOnEventFn } from 'types/electron';
 
 const electron = window.electron;
 
@@ -16,8 +16,8 @@ export class ElectronService {
    * @returns Observable<T> - An observable emitting event data
    */
   private createObservable<
-    TKey extends keyof ElectronEventFn,
-    TData extends Parameters<Parameters<ElectronEventFn[TKey]>[0]>[1]
+    TKey extends keyof ElectronOnEventFn,
+    TData extends Parameters<Parameters<ElectronOnEventFn[TKey]>[0]>[1]
   >(eventName: TKey): Observable<TData> {
     return new Observable<TData>((observer) => {
       const handler = (_event: any, data: TData) => {
