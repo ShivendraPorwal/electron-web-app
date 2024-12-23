@@ -34,10 +34,7 @@
                 "output": "/assets/dwt-resources/"
               }
             ],
-            "styles": [
-              "src/styles.scss",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css"
-            ],
+            "styles": ["src/styles.scss"],
             "scripts": ["node_modules/dwt/dist/dynamsoft.webtwain.min.js"]
           },
           "configurations": {

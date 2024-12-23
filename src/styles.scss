@@ -1,1 +1,6 @@
-/* You can add global styles to this file, and also import other style files */
+/* You can add global styles to this file; and also import other style files */
+
+@import "primeng/resources/primeng.css";
+@import "node_modules/primeng/resources/themes/saga-blue/theme.css";
+@import "primeicons/primeicons.css";
+@import "node_modules/bootstrap/dist/css/bootstrap.min.css"; // TODO: remove

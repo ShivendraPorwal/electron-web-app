@@ -3,11 +3,12 @@
 
   <div class="input-group">
     <input
+      pInputText
       type="text"
       [(ngModel)]="clientName"
       placeholder="Enter client name"
     />
-    <button (click)="createFolder()">Create Folder</button>
+    <p-button (click)="createFolder()" label="Create Folder" />
   </div>
 
   <p *ngIf="message" class="message">{{ message }}</p>
@@ -18,14 +19,14 @@
       <li *ngFor="let folder of folders">{{ folder }}</li>
     </ul>
   </div>
-</div>
 
-<div class="folder-explorer">
-  <h2>Select a Folder</h2>
+  <div class="folder-explorer">
+    <h2>Select a Folder</h2>
 
-  <button (click)="selectFolder()">Browse</button>
+    <p-button (click)="selectFolder()" label="Browse" />
 
-  <div *ngIf="selectedFolder">
-    <p>Selected Folder: {{ selectedFolder }}</p>
+    <div *ngIf="selectedFolder">
+      <p>Selected Folder: {{ selectedFolder }}</p>
+    </div>
   </div>
 </div>

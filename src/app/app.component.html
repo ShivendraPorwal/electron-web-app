@@ -1,10 +1,17 @@
-<div class="toolbar" role="banner">
-  <h6>Hello User</h6>
-
-  <a routerLink="/electron-poc">Go to Electron POC</a>
-
-  <a routerLink="/auth">Go to Authentication</a>
-  <a routerLink="/dwt">Go to Twain Scanner</a>
-</div>
+<p-toolbar>
+  <div class="p-toolbar-group-start">
+    <p-button
+      severity="secondary"
+      label="Electron POC"
+      routerLink="/electron-poc"
+    />
+  </div>
+  <div class="p-toolbar-group-center">
+    <p-button label="Go to DWT Scanner" [link]="true" routerLink="/dwt" />
+  </div>
+  <div class="p-toolbar-group-end">
+    <p-button label="Authentication" [link]="true" routerLink="/auth" />
+  </div>
+</p-toolbar>
 
 <router-outlet></router-outlet>

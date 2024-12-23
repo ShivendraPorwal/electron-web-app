@@ -33,7 +33,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^19.0.0",
+    "@angular/animations": "^19.0.5",
     "@angular/common": "^19.0.0",
     "@angular/compiler": "^19.0.0",
     "@angular/core": "^19.0.0",
@@ -41,13 +41,14 @@
     "@angular/platform-browser": "^19.0.0",
     "@angular/platform-browser-dynamic": "^19.0.0",
     "@angular/router": "^19.0.0",
+    "bootstrap": "^5.3.3",
     "@ng-bootstrap/ng-bootstrap": "~15.0.0",
     "@primeng/themes": "^19.0.1",
-    "bootstrap": "^5.3.3",
     "dwt": "^18.5.1",
     "electron-updater": "^6.3.9",
     "electronmon": "^2.0.3",
-    "primeng": "^19.0.1",
+    "primeicons": "^7.0.0",
+    "primeng": "^17.18.12",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
@@ -58,17 +59,17 @@
     "@angular/compiler-cli": "^19.0.0",
     "@types/dwt": "^16.1.7",
     "@types/electron": "^1.4.38",
+    "@types/jasmine": "~5.1.0",
+    "concurrently": "^9.1.0",
     "electron": "^33.2.1",
     "electron-builder": "^25.1.8",
-    "concurrently": "^9.1.0",
-    "wait-on": "^8.0.1",
-    "@types/jasmine": "~5.1.0",
     "jasmine-core": "~5.4.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.6.2"
+    "typescript": "~5.6.2",
+    "wait-on": "^8.0.1"
   }
 }
