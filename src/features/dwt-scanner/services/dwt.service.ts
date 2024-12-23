@@ -17,9 +17,7 @@ import { DWTInitialConfig } from 'dwt/dist/types/Dynamsoft';
 
 const NULL_WebTwain = null as unknown as WebTwain;
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class DwtService {
   barcodeSubject: Subject<any> = new Subject<any>();
   bufferSubject: Subject<string> = new Subject<string>();

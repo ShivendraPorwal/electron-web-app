@@ -7,6 +7,7 @@ import { DwtService } from '../../services';
   templateUrl: './dwt-app.component.html',
   styleUrls: ['./dwt-app.component.scss'],
   standalone: false,
+  providers: [DwtService], // Provided at component level to reinitialize it every time
 })
 export class DwtAppComponent implements OnInit {
   eventsSubject: Subject<void> = new Subject<void>();
