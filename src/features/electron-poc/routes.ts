@@ -6,9 +6,8 @@ export const electronPOCRoutes: Route[] = [
     path: '',
     component: MainComponent,
     children: [
-      { path: '', redirectTo: 'demo', pathMatch: 'full' },
       {
-        path: 'demo',
+        path: '',
         component: DemoComponent,
       },
     ],

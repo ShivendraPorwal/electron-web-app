@@ -12,8 +12,8 @@ function createWindow() {
     width: 1200,
     height: 800,
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"), // Ensure preload.js is in the correct path
-      nodeIntegration: false, // Disable nodeIntegration for security
+      preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: false,
       contextIsolation: true, // Enable contextIsolation for security
     },
   });
@@ -23,7 +23,7 @@ function createWindow() {
     mainWindow.webContents.openDevTools(); // Open DevTools in development mode
   } else {
     mainWindow.loadFile(
-      path.join(__dirname, "dist/electron-angular-app/index.html")
+      path.join(__dirname, "dist/electron-angular-app/browser/index.html") // Angular build file path
     );
   }
 }
@@ -54,11 +54,28 @@ function checkForUpdates() {
   // Handle the 'update-available' event
   autoUpdater.on("update-available", () => {
     logToApp("update-available");
-    dialog.showMessageBox(mainWindow, {
-      type: "info",
-      title: "Update Available",
-      message: "An update is available. It will be downloaded and installed.",
-    });
+    dialog
+      .showMessageBox(mainWindow, {
+        type: "info",
+        title: "Update Available",
+        message: "An update is available. It will be downloaded and installed.",
+        buttons: ["Install", "Cancel"],
+      })
+      .then((result) => {
+        const { response } = result;
+
+        // If the user clicks "Install" (response 0), proceed with the update
+        if (response === 0) {
+          logToApp("User clicked Install, starting the update...");
+          autoUpdater.downloadUpdate(); // Start downloading the update
+        } else {
+          logToApp("User clicked Cancel, update will not proceed.");
+          // Handle cancel case if needed (you can cancel or stop the update process here)
+        }
+      })
+      .catch((err) => {
+        console.error("Error showing message box: ", err);
+      });
   });
 
   // Handle the 'update-not-available' event
@@ -166,9 +183,13 @@ function createClientFolder(clientName) {
 
   if (!fs.existsSync(clientFolder)) {
     fs.mkdirSync(clientFolder);
-    return `Client folder created for ${clientName}.`;
+    const message = `Client folder created for ${clientName}.`;
+    logToApp(message);
+    return message;
   } else {
-    return `Client folder for ${clientName} already exists.`;
+    const message = `Client folder for ${clientName} already exists.`;
+    logToApp(message);
+    return message;
   }
 }
 

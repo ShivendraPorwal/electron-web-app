@@ -1,12 +1,12 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { DwtService } from '../../services';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
+import { DwtService } from '../../services';
 
 @Component({
-    selector: 'app-dwt-app',
-    templateUrl: './dwt-app.component.html',
-    styleUrls: ['./dwt-app.component.scss'],
-    standalone: false
+  selector: 'app-dwt-app',
+  templateUrl: './dwt-app.component.html',
+  styleUrls: ['./dwt-app.component.scss'],
+  standalone: false,
 })
 export class DwtAppComponent implements OnInit {
   eventsSubject: Subject<void> = new Subject<void>();

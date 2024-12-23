@@ -17,7 +17,8 @@ const appRoutes: Routes = [
     loadChildren: () =>
       import('features/dwt-scanner').then((m) => m.DwtScannerModule),
   },
-  { path: '**', redirectTo: 'auth', pathMatch: 'full' },
+  { path: '**', redirectTo: 'electron-poc' }, // Wildcard route to catch any undefined paths
+  { path: '', redirectTo: 'electron-poc', pathMatch: 'full' },
 ];
 
 @NgModule({
