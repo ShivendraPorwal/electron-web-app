@@ -26,7 +26,11 @@ contextBridge.exposeInMainWorld("electron", {
 
 contextBridge.exposeInMainWorld("folderManager", {
   createClientFolder: (clientName) =>
-    ipcRenderer.invoke("create-client-folder", clientName),
-  viewClientFolders: () => ipcRenderer.invoke("view-client-folders"),
-  openFolderDialog: () => ipcRenderer.invoke("dialog:openFolder"),
+    ipcRenderer.invoke("client-folder:create", clientName),
+  viewClientFolders: () => ipcRenderer.invoke("client-folder:view"),
+  selectAndCreateClientFolder: (clientName) =>
+    ipcRenderer.invoke("client-folder:select-and-create", clientName),
+  deleteClientFolder: (clientName) =>
+    ipcRenderer.invoke("client-folder:delete", clientName),
+  openFolderDialog: () => ipcRenderer.invoke("dialog:open-folder"),
 });

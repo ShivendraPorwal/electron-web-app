@@ -28,6 +28,8 @@ declare global {
       createClientFolder: (clientName: string) => Promise<string>;
       viewClientFolders: () => Promise<string[]>;
       openFolderDialog: () => Promise<string>;
+      selectAndCreateClientFolder: (clientName: string) => Promise<string>;
+      deleteClientFolder: (clientName: string) => Promise<string>;
     };
   }
 }

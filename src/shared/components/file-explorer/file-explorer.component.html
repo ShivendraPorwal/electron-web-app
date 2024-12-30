@@ -9,14 +9,26 @@
       placeholder="Enter client name"
     />
     <p-button (click)="createFolder()" label="Create Folder" />
+    <p-button (click)="selectAndCreateFolder()" label="Select & Create" />
   </div>
 
   <p *ngIf="message" class="message">{{ message }}</p>
 
   <div class="folder-list">
-    <h3>Existing Folders</h3>
+    <h3>Existing Clients Folders</h3>
     <ul>
-      <li *ngFor="let folder of folders">{{ folder }}</li>
+      <li *ngFor="let folder of folders">
+        {{ folder }}
+        <p-button
+          (onClick)="deleteClientFolder(folder)"
+          class="clear-log"
+          icon="pi pi-times"
+          [rounded]="true"
+          severity="danger"
+          [outlined]="true"
+          size="small"
+        />
+      </li>
     </ul>
   </div>
 

@@ -35,7 +35,7 @@ ipcMain.handle("get-app-version", () => {
   return app.getVersion(); // Send back app version
 });
 // Open folder dialog when requested
-ipcMain.handle("dialog:openFolder", async () => {
+ipcMain.handle("dialog:open-folder", async () => {
   const result = await dialog.showOpenDialog(mainWindow, {
     properties: ["openDirectory"],
   });
@@ -139,6 +139,7 @@ function emitEventToApp(event, data) {
 function logToApp(message) {
   console.info(message);
   emitEventToApp("log-to-angular", { message }); // Send log to Angular
+  return message;
 }
 
 /**
@@ -190,9 +191,46 @@ function createClientFolder(clientName) {
 
   if (!fs.existsSync(clientFolder)) {
     fs.mkdirSync(clientFolder);
-    return `Client folder created for ${clientName}.`;
+
+    return logToApp(`Client folder created for ${clientName}.`);
   } else {
-    return `Client folder for ${clientName} already exists.`;
+    return logToApp(`Client folder for ${clientName} already exists.`);
+  }
+}
+
+function selectDirectory() {
+  const result = dialog.showOpenDialogSync({
+    properties: ["openDirectory"], // Allow only directories to be selected
+    title: "Select a Directory",
+    buttonLabel: "Select",
+  });
+
+  if (result && result.length > 0) {
+    return result[0]; // Return the selected directory path
+  } else {
+    return null; // No directory selected
+  }
+}
+
+function createClientFolderInSelectedDirectory(clientName) {
+  const selectedDirectory = selectDirectory();
+
+  if (!selectedDirectory) {
+    return logToApp("No directory selected.");
+  }
+
+  const newFolderPath = path.join(selectedDirectory, clientName);
+
+  if (!fs.existsSync(newFolderPath)) {
+    fs.mkdirSync(newFolderPath);
+
+    return logToApp(
+      `Client Folder "${clientName}" created in ${selectedDirectory}.`
+    );
+  } else {
+    return logToApp(
+      `Client Folder "${clientName}" already exists in ${selectedDirectory}.`
+    );
   }
 }
 
@@ -206,18 +244,58 @@ function viewClientFolders() {
   return fs
     .readdirSync(baseFolder, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name);
+    .map((entry) => path.join(baseFolder, entry.name)); // Return full paths
 }
 
-// IPC Handlers
-ipcMain.handle("create-client-folder", (_event, clientName) => {
+function deleteClientFolder(clientName) {
+  const baseFolder = path.join(app.getPath("userData"), "clients");
+  const folderPath = path.join(baseFolder, clientName);
+
+  if (!fs.existsSync(folderPath)) {
+    return logToApp(`Client Folder "${folderPath}" does not exist.`);
+  }
+
+  // Confirm deletion
+  const result = dialog.showMessageBoxSync({
+    type: "warning",
+    title: "Confirm Deletion",
+    message: `Are you sure you want to delete the folder "${folderPath}"? This action cannot be undone.`,
+    buttons: ["Yes", "No"],
+    defaultId: 1, // Default to "No"
+  });
+
+  if (result === 0) {
+    try {
+      fs.rmSync(folderPath, { recursive: true, force: true });
+      return logToApp(`Folder "${folderPath}" has been deleted.`);
+    } catch (err) {
+      return logToApp(
+        `Failed to delete folder "${folderPath}". Error: ${err.message}`
+      );
+    }
+  } else {
+    return logToApp(`Folder deletion canceled.`);
+  }
+}
+
+ipcMain.handle("client-folder:create", (_event, clientName) => {
   logToApp("Create client folder");
   return createClientFolder(clientName);
 });
 
-ipcMain.handle("view-client-folders", () => {
+ipcMain.handle("client-folder:view", () => {
   logToApp("view client folder");
   return viewClientFolders();
+});
+
+ipcMain.handle("client-folder:select-and-create", (_event, clientName) => {
+  logToApp(`Select and create client folder for ${clientName}`);
+  return createClientFolderInSelectedDirectory(clientName);
+});
+
+ipcMain.handle("client-folder:delete", (_event, folderPath) => {
+  logToApp(`Delete client folder: ${folderPath}`);
+  return deleteClientFolder(folderPath);
 });
 
 // --------------- Menu --------------------

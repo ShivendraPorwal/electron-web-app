@@ -26,6 +26,25 @@ export class FileExplorerComponent {
     }
   }
 
+  selectAndCreateFolder() {
+    if (this.clientName.trim()) {
+      this.folderService
+        .selectAndCreateClientFolder(this.clientName)
+        .then((msg) => {
+          this.message = msg;
+          this.fetchFolders();
+        });
+    }
+  }
+
+  deleteClientFolder(clientPath: string) {
+    const clientName = clientPath.substring(clientPath.lastIndexOf('/') + 1); // Extract client name from path
+    this.folderService.deleteClientFolder(clientName).then((msg) => {
+      this.message = msg;
+      this.fetchFolders();
+    });
+  }
+
   selectFolder(): void {
     this.folderService
       .openFolderDialog()

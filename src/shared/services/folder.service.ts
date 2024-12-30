@@ -15,4 +15,12 @@ export class FolderService {
   openFolderDialog(): Promise<string> {
     return window.folderManager.openFolderDialog(); // Call Electron's dialog
   }
+
+  selectAndCreateClientFolder(clientName: string): Promise<string> {
+    return window.folderManager.selectAndCreateClientFolder(clientName);
+  }
+
+  deleteClientFolder(clientName: string): Promise<string> {
+    return window.folderManager.deleteClientFolder(clientName);
+  }
 }
