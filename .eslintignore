@@ -1,0 +1,11 @@
+node_modules
+dist
+jest.config.js
+fixtures
+coverage
+__snapshots__
+main.js
+preload.js
+
+
+*.md

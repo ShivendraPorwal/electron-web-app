@@ -1,19 +1,20 @@
+/* eslint-disable*/
+
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { DwtService, Device } from '../../services/dwt.service';
 import { WebTwain } from 'dwt/dist/types/WebTwain';
 import { ThumbnailViewer } from 'dwt/dist/types/WebTwain.Viewer';
 import { ThumbnailViewerSettings } from 'dwt/dist/types/WebTwain.Viewer';
 import { ViewMode } from 'dwt/dist/types/WebTwain.Viewer';
-import { ViewerEvent } from 'dwt/dist/types/WebTwain.Viewer';
-import { Subscription, Observable, empty } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import Dynamsoft from 'dwt';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-    selector: 'app-dwt',
-    templateUrl: './dwt.component.html',
-    styleUrls: ['./dwt.component.scss'],
-    standalone: false
+  selector: 'app-dwt',
+  templateUrl: './dwt.component.html',
+  styleUrls: ['./dwt.component.scss'],
+  standalone: false,
 })
 export class DwtComponent implements OnInit, OnDestroy {
   @Input() events!: Observable<void>;

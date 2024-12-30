@@ -5,17 +5,17 @@ const appRoutes: Routes = [
   {
     path: 'electron-poc',
     loadChildren: () =>
-      import('features/electron-poc').then((m) => m.ElectronPOCModule),
+      import('@features/electron-poc').then((m) => m.ElectronPOCModule),
   },
   {
     path: 'auth',
     loadChildren: () =>
-      import('features/authentication').then((m) => m.AuthenticationModule),
+      import('@features/authentication').then((m) => m.AuthenticationModule),
   },
   {
     path: 'dwt',
     loadChildren: () =>
-      import('features/dwt-scanner').then((m) => m.DwtScannerModule),
+      import('@features/dwt-scanner').then((m) => m.DwtScannerModule),
   },
   { path: '**', redirectTo: 'electron-poc' }, // Wildcard route to catch any undefined paths
   { path: '', redirectTo: 'electron-poc', pathMatch: 'full' },

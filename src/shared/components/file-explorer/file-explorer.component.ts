@@ -1,11 +1,13 @@
+/* eslint-disable*/
+
 import { Component } from '@angular/core';
-import { FolderService } from 'shared/services';
+import { FolderService } from '@shared/services';
 
 @Component({
-    selector: 'shared-file-explorer',
-    templateUrl: './file-explorer.component.html',
-    styleUrls: ['./file-explorer.component.scss'],
-    standalone: false
+  selector: 'shared-file-explorer',
+  templateUrl: './file-explorer.component.html',
+  styleUrls: ['./file-explorer.component.scss'],
+  standalone: false,
 })
 export class FileExplorerComponent {
   clientName = '';

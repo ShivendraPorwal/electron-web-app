@@ -1,6 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
+import { ForceAny } from '@shared/typescript/utility.types';
+import { ElectronOnEventFn } from 'src/types/electron.type';
 import { from, Observable } from 'rxjs';
-import { DownloadProgress, ElectronOnEventFn } from 'types/electron';
 
 const electron = window.electron;
 
@@ -15,23 +16,23 @@ export class ElectronService {
    * @param eventName - The name of the Electron event to listen to
    * @returns Observable<T> - An observable emitting event data
    */
-  private createObservable<
+  createObservable<
     TKey extends keyof ElectronOnEventFn,
     TData extends Parameters<Parameters<ElectronOnEventFn[TKey]>[0]>[1]
   >(eventName: TKey): Observable<TData> {
     return new Observable<TData>((observer) => {
-      const handler = (_event: any, data: TData) => {
+      const handler = (_event: ForceAny, data: TData) => {
         this.ngZone.run(() => {
           observer.next(data);
         });
       };
 
       // Attach the event listener
-      electron[eventName](handler);
+      void electron[eventName](handler);
 
       // Cleanup function to remove the listener when unsubscribed
       return () => {
-        electron.removeListener(eventName, handler);
+        void electron.removeListener(eventName, handler);
       };
     });
   }
