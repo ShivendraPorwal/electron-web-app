@@ -42,15 +42,20 @@ ipcMain.handle("dialog:openFolder", async () => {
   return result.filePaths[0]; // Return the selected folder path
 });
 
-// FIXME: This need to be worked upon and tested
-// TODO: Handle close if download is in progress
+/**
+ * @description
+ *
+ * Check for updates
+ * To download the latest version of the build
+ * Mac update won't work unless it is signed @see {https://medium.com/@johndyer24/creating-and-deploying-an-auto-updating-electron-app-for-mac-and-windows-using-electron-builder-6a3982c0cee6}
+ * FIXME: This need to be worked upon and tested
+ */
 function checkForUpdates() {
   // autoUpdater.setFeedURL({ url: feedURL });
   // autoUpdater.checkForUpdates();
 
   // Check for updates
   autoUpdater.checkForUpdatesAndNotify();
-  autoUpdater.autoInstallOnAppQuit = true;
 
   // Handle the 'update-available' event
   autoUpdater.on("update-available", () => {
