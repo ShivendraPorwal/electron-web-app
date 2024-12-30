@@ -12,8 +12,8 @@ function createWindow() {
     width: 1200,
     height: 800,
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"), // Ensure preload.js is in the correct path
-      nodeIntegration: false, // Disable nodeIntegration for security
+      preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: false,
       contextIsolation: true, // Enable contextIsolation for security
     },
   });
@@ -77,7 +77,6 @@ function checkForUpdates() {
       });
   });
 
-  // Handle the 'update-not-available' event
   autoUpdater.on("update-not-available", () => {
     logToApp("update-not-available");
 
@@ -88,19 +87,16 @@ function checkForUpdates() {
     });
   });
 
-  // Handle the 'download-progress' event
   autoUpdater.on("download-progress", (progressObj) => {
     logToApp(progressObj);
 
     const { percent, transferred, total, bytesPerSecond } = progressObj;
 
-    // Create or update the progress dialog
-
     emitEventToApp("download-progress", {
-      percent: +percent.toFixed(2),
-      transferred: (transferred / 1024 / 1024).toFixed(2), //} MB`,
-      total: (total / 1024 / 1024).toFixed(2), //} MB`,
-      speed: (bytesPerSecond / 1024).toFixed(2), //} KB/s`,
+      percent: +percent.toFixed(2), // %,
+      transferred: (transferred / 1024 / 1024).toFixed(2), // MB`,
+      total: (total / 1024 / 1024).toFixed(2), // MB`,
+      speed: (bytesPerSecond / 1024).toFixed(2), // KB/s`,
     });
   });
 
