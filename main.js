@@ -50,6 +50,7 @@ function checkForUpdates() {
 
   // Check for updates
   autoUpdater.checkForUpdatesAndNotify();
+  autoUpdater.autoInstallOnAppQuit = true;
 
   // Handle the 'update-available' event
   autoUpdater.on("update-available", () => {
@@ -59,18 +60,16 @@ function checkForUpdates() {
         type: "info",
         title: "Update Available",
         message: "An update is available. It will be downloaded and installed.",
-        buttons: ["Install", "Cancel"],
+        buttons: ["Download", "Cancel"],
       })
       .then((result) => {
         const { response } = result;
 
-        // If the user clicks "Install" (response 0), proceed with the update
         if (response === 0) {
           logToApp("User clicked Install, starting the update...");
-          autoUpdater.downloadUpdate(); // Start downloading the update
+          autoUpdater.downloadUpdate();
         } else {
           logToApp("User clicked Cancel, update will not proceed.");
-          // Handle cancel case if needed (you can cancel or stop the update process here)
         }
       })
       .catch((err) => {
@@ -105,19 +104,6 @@ function checkForUpdates() {
     });
   });
 
-  // Handle the 'update-downloaded' event
-  autoUpdater.on("update-downloaded", (info) => {
-    dialog
-      .showMessageBox(mainWindow, {
-        type: "info",
-        title: "Update Ready",
-        message: "Update downloaded. The app will restart to apply the update.",
-      })
-      .then(() => {
-        autoUpdater.quitAndInstall();
-      });
-  });
-
   autoUpdater.on("update-downloaded", () => {
     dialog
       .showMessageBox({
@@ -130,6 +116,7 @@ function checkForUpdates() {
       .then((result) => {
         if (result.response === 0) {
           logToApp("Update Downloaded: Quit and Install");
+          autoUpdater.autoRunAppAfterInstall = true;
           autoUpdater.quitAndInstall();
         } else {
           logToApp("Update Downloaded: Install later");

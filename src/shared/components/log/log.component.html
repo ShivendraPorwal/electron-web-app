@@ -1,0 +1,15 @@
+<div class="log">
+  Log:
+  <p-button
+    (onClick)="clearLog()"
+    class="clear-log"
+    icon="pi pi-times"
+    [rounded]="true"
+    severity="danger"
+    [outlined]="true"
+    size="small"
+  />
+  <div *ngFor="let log of logs">
+    {{ log | json }}
+  </div>
+</div>

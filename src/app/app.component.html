@@ -1,4 +1,4 @@
-<p-toolbar>
+<p-toolbar class="app-header">
   <div class="p-toolbar-group-start">
     <p-button
       severity="secondary"
@@ -14,4 +14,7 @@
   </div>
 </p-toolbar>
 
-<router-outlet></router-outlet>
+<div class="app-content">
+  <router-outlet></router-outlet>
+  <shared-log />
+</div>

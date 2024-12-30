@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { ElectronService } from '@shared/services';
+/* eslint-disable*/
+
+import { Component } from '@angular/core';
+import { ElectronService, FolderService } from '@shared/services';
 import { ForceAny } from '@shared/typescript/utility.types';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  selector: 'shared-log',
+  templateUrl: './log.component.html',
+  styleUrls: ['./log.component.scss'],
   standalone: false,
 })
-export class AppComponent implements OnInit {
-  title = 'angular-electron-app';
+export class LogComponent {
   logs: ForceAny[] = [];
 
   constructor(private electronService: ElectronService) {}
