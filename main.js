@@ -12,8 +12,8 @@ function createWindow() {
     width: 1200,
     height: 800,
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
-      nodeIntegration: false,
+      preload: path.join(__dirname, "preload.js"), // Ensure preload.js is in the correct path
+      nodeIntegration: false, // Disable nodeIntegration for security
       contextIsolation: true, // Enable contextIsolation for security
     },
   });
@@ -118,6 +118,25 @@ function checkForUpdates() {
       });
   });
 
+  autoUpdater.on("update-downloaded", () => {
+    dialog
+      .showMessageBox({
+        type: "question",
+        buttons: ["Restart", "Later"],
+        defaultId: 0,
+        title: "Update Ready",
+        message: "An update has been downloaded. Restart to apply it?",
+      })
+      .then((result) => {
+        if (result.response === 0) {
+          logToApp("Update Downloaded: Quit and Install");
+          autoUpdater.quitAndInstall();
+        } else {
+          logToApp("Update Downloaded: Install later");
+        }
+      });
+  });
+
   autoUpdater.on("error", (err) => {
     logToApp("Error Checking update");
     logToApp(err);
@@ -183,13 +202,9 @@ function createClientFolder(clientName) {
 
   if (!fs.existsSync(clientFolder)) {
     fs.mkdirSync(clientFolder);
-    const message = `Client folder created for ${clientName}.`;
-    logToApp(message);
-    return message;
+    return `Client folder created for ${clientName}.`;
   } else {
-    const message = `Client folder for ${clientName} already exists.`;
-    logToApp(message);
-    return message;
+    return `Client folder for ${clientName} already exists.`;
   }
 }
 
