@@ -249,7 +249,25 @@ const template = [
       {
         label: "Test Menu 2",
         click: () => {
-          logToApp("Test Menu 2 clicked");
+          dialog
+            .showMessageBox(mainWindow, {
+              type: "info",
+              title: "Test Dialogue",
+              message: "Something is wrong. Try it again",
+              buttons: ["Okay", "Cancel"],
+            })
+            .then((result) => {
+              const { response } = result;
+
+              if (response === 0) {
+                logToApp("User clicked Confirm, starting the process...");
+              } else {
+                logToApp("User clicked Cancel, will not proceed...");
+              }
+            })
+            .catch((err) => {
+              console.error("Error showing message box: ", err);
+            });
         },
       },
     ],
