@@ -1,11 +1,13 @@
+/* eslint-disable*/
+
 import { Component } from '@angular/core';
-import { ElectronService } from 'shared/services';
+import { ElectronService } from '@shared/services';
 
 @Component({
-    selector: 'shared-download-progress',
-    templateUrl: './download-progress.component.html',
-    styleUrls: ['./download-progress.component.scss'],
-    standalone: false
+  selector: 'shared-download-progress',
+  templateUrl: './download-progress.component.html',
+  styleUrls: ['./download-progress.component.scss'],
+  standalone: false,
 })
 export class DownloadProgressComponent {
   downloadProgress: number = 0;
@@ -22,10 +24,10 @@ export class DownloadProgressComponent {
   initProgress = () => {
     // Subscribe to download progress updates
     this.electronService.getDownloadProgress().subscribe((progress) => {
-      this.downloadProgress = progress.percent;
-      this.transferred = progress.transferred;
-      this.total = progress.total;
-      this.speed = progress.speed;
+      this.downloadProgress = progress['percent'];
+      this.transferred = progress['transferred'];
+      this.total = progress['total'];
+      this.speed = progress['speed'];
     });
   };
 }

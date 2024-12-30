@@ -19,11 +19,10 @@
     "module": "ES2022",
     "baseUrl": "./",
     "paths": {
-      "shared/*": ["src/shared/*"],
-      "features/*": ["src/features/*"],
-      "dwt/*": ["src/dwt/*"],
-      "types/*": ["src/@types/*"],
-      "env/*": ["src/environments/*"]
+      "@shared/*": ["src/shared/*"],
+      "@features/*": ["src/features/*"],
+      "@types/*": ["src/types/*"],
+      "@env/*": ["src/environments/*"]
     }
   },
   "angularCompilerOptions": {

@@ -1,28 +1,28 @@
-export {};
+import { ForceAny } from '@shared/typescript/utility.types';
 
-export type DownloadProgress = {
+export interface DownloadProgress {
   percent: number;
   transferred: number; // MB
   total: number; // MB
   speed: number; // KB/s
-};
+}
 
-type TEventCb<TData = any> = (event: string, data: TData) => void;
+type TEventCb<TData = ForceAny> = (event: string, data: TData) => void;
 
-export type ElectronOnEventFn = {
+export interface ElectronOnEventFn {
   onLogFromElectron: (callback: TEventCb) => Promise<void>;
   onDownloadProgress: (callback: TEventCb<DownloadProgress>) => Promise<void>;
-};
+}
 
-export type ElectronHandleEventFn = {
+export interface ElectronHandleEventFn {
   getAppVersion: () => Promise<string>;
-};
+}
 
 declare global {
   interface Window {
     electron: ElectronOnEventFn &
       ElectronHandleEventFn & {
-        removeListener: (event: string, callback: any) => Promise<void>;
+        removeListener: (event: string, callback: ForceAny) => Promise<void>;
       };
     folderManager: {
       createClientFolder: (clientName: string) => Promise<string>;

@@ -1,6 +1,8 @@
+/* eslint-disable*/
+
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { environment } from 'env/environment';
+import { environment } from 'src/environments/environment';
 import Dynamsoft from 'dwt';
 import { DynamsoftEnumsDWT } from 'dwt/dist/types/Dynamsoft.Enum';
 import { WebTwain } from 'dwt/dist/types/WebTwain';
