@@ -57,3 +57,75 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+# Project Folder Structure
+
+src/
+├── features/ # Feature modules outside app
+│ ├── dashboard/
+│ │ ├── components/
+│ │ │ └── widget/
+│ │ │ ├── widget.component.ts
+│ │ │ └── widget.component.spec.ts
+│ │ ├── pages/
+│ │ │ └── dashboard-home/
+│ │ │ ├── dashboard-home.component.ts
+│ │ │ └── dashboard-home.component.spec.ts
+│ │ ├── services/
+│ │ │ └── dashboard.service.ts
+│ │ └── dashboard.module.ts
+│ │
+│ └── admin/
+│ ├── components/
+│ ├── pages/
+│ ├── services/
+│ └── admin.module.ts
+│
+├── shared/ # Standalone shared components
+│ ├── components/
+│ │ ├── header/
+│ │ │ ├── header.component.ts
+│ │ │ └── header.component.spec.ts
+│ │ └── footer/
+│ │ ├── footer.component.ts
+│ │ └── footer.component.spec.ts
+│ ├── directives/
+│ │ └── highlight.directive.ts
+│ └── pipes/
+│ └── filter.pipe.ts
+│
+├── entities/ # Standalone domain models
+│ ├── models/
+│ │ ├── user.model.ts
+│ │ └── product.model.ts
+│ └── interfaces/
+│ ├── api-response.interface.ts
+│ └── http-error.interface.ts
+│
+├── app/ # Core app module
+│ ├── core/ # Core services and utilities
+│ │ ├── guards/
+│ │ │ └── auth.guard.ts
+│ │ ├── interceptors/
+│ │ │ ├── error.interceptor.ts
+│ │ │ └── jwt.interceptor.ts
+│ │ ├── services/
+│ │ │ ├── auth.service.ts
+│ │ │ └── logger.service.ts
+│ │ └── core.module.ts
+│ │
+│ │
+│ ├── app.component.ts
+│ ├── app.config.ts
+│ └── app.routes.ts
+│
+├── assets/
+│ ├── images/
+│ ├── icons/
+│ └── styles/
+│
+├── environments/
+│ ├── environment.ts
+│ └── environment.prod.ts
+│
+└── styles.scss
