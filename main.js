@@ -54,23 +54,23 @@ function checkForUpdates() {
   // autoUpdater.setFeedURL({ url: feedURL });
   // autoUpdater.checkForUpdates();
   autoUpdater.requestHeaders = {
-    "PRIVATE-TOKEN": "glpat-XRN6stw32wi7t8axL26y",
+    "PRIVATE-TOKEN": "glpat-PNTkPEEe2wVtDs4uHN9s",
   };
 
   autoUpdater.setFeedURL({
     provider: "generic",
-    url: "https://gitlab.com/api/v4/projects/65769590/jobs/artifacts/master/raw/dist?job=build",
+    url: "https://gitlab.com/api/v4/projects/65720678/jobs/artifacts/master/raw/dist?job=build",
   });
 
   autoUpdater.forceDevUpdateConfig = true;
-  autoUpdater.autoDownload = false
+  autoUpdater.autoDownload = false;
 
   // Check for updates
   autoUpdater.checkForUpdates();
 
   // Handle the 'update-available' event
   autoUpdater.on("update-available", (info) => {
-    logToApp("update-available",info);
+    logToApp("update-available", info);
     dialog
       .showMessageBox(mainWindow, {
         type: "info",

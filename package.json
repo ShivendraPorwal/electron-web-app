@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/test7664601/fscc.git",
+    "url": "git+https://gitlab.com/FLYdocs-Dev/TechUpgrade/frontend/fscc.git",
     "release": "latest"
   },
   "build": {
@@ -30,7 +30,7 @@
     "publish": [
       {
         "provider": "generic",
-        "url": "https://gitlab.com/api/v4/projects/65769590/jobs/artifacts/master/raw/dist?job=build"
+        "url": "https://gitlab.com/api/v4/projects/65720678/jobs/artifacts/master/raw/dist?job=build"
       }
     ],
     "files": [
