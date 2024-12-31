@@ -2,6 +2,7 @@
 
 import { Component } from '@angular/core';
 import { ElectronService } from '@shared/services';
+import { OsInfo } from '@shared/types';
 
 @Component({
   selector: 'electron-poc-demo',
@@ -11,12 +12,17 @@ import { ElectronService } from '@shared/services';
 })
 export class DemoComponent {
   version: string = '0.0.0.0';
+  osInfo!: OsInfo;
 
   constructor(private electronService: ElectronService) {}
 
   ngOnInit() {
     this.electronService.appVersion().subscribe((version) => {
       this.version = version;
+    });
+
+    this.electronService.getOsInfo().subscribe((osInfo) => {
+      this.osInfo = osInfo;
     });
 
     this.electronService.getElectronLog().subscribe((logMessage) => {

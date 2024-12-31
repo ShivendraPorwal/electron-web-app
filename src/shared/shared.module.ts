@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { LogComponent } from './components/log/log.component';
+import { JsonViewerDirective } from './directives';
 
 @NgModule({
   declarations: [
@@ -15,9 +16,20 @@ import { LogComponent } from './components/log/log.component';
     FileExplorerComponent,
     LogComponent,
   ],
-  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ButtonModule,
+    InputTextModule,
+    JsonViewerDirective,
+  ],
   providers: [FolderService, ElectronService],
   bootstrap: [],
-  exports: [DownloadProgressComponent, FileExplorerComponent, LogComponent],
+  exports: [
+    DownloadProgressComponent,
+    FileExplorerComponent,
+    LogComponent,
+    JsonViewerDirective,
+  ],
 })
 export class SharedModule {}

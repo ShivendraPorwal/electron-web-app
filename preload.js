@@ -5,9 +5,12 @@ const { contextBridge, ipcRenderer } = require("electron");
  * IPC message from main process
  */
 const ipcOnEvent = {
-  onLogFromElectron: (callback) => ipcRenderer.on("log-to-angular", callback), // Listen for logs from Electron
-  onDownloadProgress: (callback) =>
-    ipcRenderer.on("download-progress", callback), // Listen for progress of app update download
+  /** Listen for logs from Electron */
+  onLogFromElectron: (cb) => ipcRenderer.on("log-to-angular", cb),
+  /** Listen for progress of app update download */
+  onDownloadProgress: (cb) => ipcRenderer.on("download-progress", cb),
+  /** Listen for route change events from electron  */
+  onRouteChange: (cb) => ipcRenderer.on("route-change", cb),
 };
 
 /**
@@ -16,6 +19,7 @@ const ipcOnEvent = {
  */
 const ipcHandleEvent = {
   getAppVersion: () => ipcRenderer.invoke("get-app-version"),
+  getOsInfo: () => ipcRenderer.invoke("get-os-info"),
 };
 
 // Expose an API to the renderer process (Angular) securely

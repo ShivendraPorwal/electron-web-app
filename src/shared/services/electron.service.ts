@@ -1,7 +1,8 @@
 import { Injectable, NgZone } from '@angular/core';
-import { ForceAny } from '@shared/typescript/utility.types';
+import { ForceAny } from '@shared/typescript';
 import { ElectronOnEventFn } from 'src/types/electron.type';
 import { from, Observable } from 'rxjs';
+import { OsInfo } from '@shared/types';
 
 const electron = window.electron;
 
@@ -41,11 +42,19 @@ export class ElectronService {
     return from(electron.getAppVersion());
   }
 
+  getOsInfo(): Observable<OsInfo> {
+    return from(electron.getOsInfo());
+  }
+
   getElectronLog() {
     return this.createObservable('onLogFromElectron');
   }
 
   getDownloadProgress() {
     return this.createObservable('onDownloadProgress');
+  }
+
+  getRouteChange() {
+    return this.createObservable('onRouteChange');
   }
 }

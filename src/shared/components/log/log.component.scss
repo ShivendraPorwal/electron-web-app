@@ -1,9 +1,21 @@
 .log {
-  position: sticky;
-  bottom: 0;
-  left: 0;
   max-height: 300px;
   overflow: auto;
+  background-color: rgba(128, 128, 128, 0.245);
+  padding: 10px;
+}
+
+.log-head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.all-logs {
+  font-size: 12px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.675);
+  padding: 5px;
 }
 
 :host::ng-deep {
@@ -11,8 +23,11 @@
     .p-button {
       border-radius: 50%;
       padding: 5px;
-      height: 25px;
-      width: 25px;
+      height: 20px;
+      width: 20px;
+    }
+    .pi-times {
+      font-size: 10px;
     }
   }
 }

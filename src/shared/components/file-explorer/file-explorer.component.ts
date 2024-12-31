@@ -1,7 +1,7 @@
 /* eslint-disable*/
 
 import { Component } from '@angular/core';
-import { FolderService } from '@shared/services';
+import { ElectronService, FolderService } from '@shared/services';
 
 @Component({
   selector: 'shared-file-explorer',
@@ -15,7 +15,11 @@ export class FileExplorerComponent {
   folders: string[] = [];
   selectedFolder: string = '';
 
-  constructor(private folderService: FolderService) {}
+  constructor(
+    private folderService: FolderService,
+
+    private electronService: ElectronService
+  ) {}
 
   createFolder() {
     if (this.clientName.trim()) {
@@ -38,10 +42,14 @@ export class FileExplorerComponent {
   }
 
   deleteClientFolder(clientPath: string) {
-    const clientName = clientPath.substring(clientPath.lastIndexOf('/') + 1); // Extract client name from path
-    this.folderService.deleteClientFolder(clientName).then((msg) => {
-      this.message = msg;
-      this.fetchFolders();
+    this.electronService.getOsInfo().subscribe(({ type }) => {
+      const clientName = clientPath.substring(
+        clientPath.lastIndexOf(type === 'Darwin' ? '/' : '\\') + 1
+      );
+      this.folderService.deleteClientFolder(clientName).then((msg) => {
+        this.message = msg;
+        this.fetchFolders();
+      });
     });
   }
 

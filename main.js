@@ -1,6 +1,7 @@
 const { app, Menu, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const fs = require("fs");
+const os = require("os");
 const { autoUpdater } = require("electron-updater");
 
 let mainWindow;
@@ -32,14 +33,29 @@ function createWindow() {
 
 ipcMain.handle("get-app-version", () => {
   logToApp("Getting version information");
-  return app.getVersion(); // Send back app version
+  return app.getVersion();
 });
-// Open folder dialog when requested
-ipcMain.handle("dialog:open-folder", async () => {
-  const result = await dialog.showOpenDialog(mainWindow, {
+
+ipcMain.handle("get-os-info", () => {
+  const osInfo = {
+    type: os.type(), // 'Linux', 'Darwin', 'Windows_NT'
+    platform: os.platform(), // 'linux', 'darwin', 'win32'
+    architecture: os.arch(), // 'x64', 'arm64', etc.
+    version: os.release(), // OS version
+  };
+
+  logToApp("Getting OS information:", osInfo);
+  return osInfo;
+});
+
+/**
+ * Open folder dialog when requested
+ */
+ipcMain.handle("dialog:open-folder", () => {
+  const result = dialog.showOpenDialog(mainWindow, {
     properties: ["openDirectory"],
   });
-  return result.filePaths[0]; // Return the selected folder path
+  return result.filePaths[0];
 });
 
 /**
@@ -48,11 +64,9 @@ ipcMain.handle("dialog:open-folder", async () => {
  * Check for updates
  * To download the latest version of the build
  * Mac update won't work unless it is signed @see {https://medium.com/@johndyer24/creating-and-deploying-an-auto-updating-electron-app-for-mac-and-windows-using-electron-builder-6a3982c0cee6}
- * FIXME: This need to be worked upon and tested
+ *
  */
 function checkForUpdates() {
-  // autoUpdater.setFeedURL({ url: feedURL });
-  // autoUpdater.checkForUpdates();
   autoUpdater.requestHeaders = {
     "PRIVATE-TOKEN": "glpat-PNTkPEEe2wVtDs4uHN9s",
   };
@@ -65,10 +79,8 @@ function checkForUpdates() {
   autoUpdater.forceDevUpdateConfig = true;
   autoUpdater.autoDownload = false;
 
-  // Check for updates
   autoUpdater.checkForUpdates();
 
-  // Handle the 'update-available' event
   autoUpdater.on("update-available", (info) => {
     logToApp("update-available", info);
     dialog
@@ -143,13 +155,18 @@ function checkForUpdates() {
   });
 }
 
+/**
+ * Handle to emit events to angular
+ * @param {"route-change"|"download-progress"|"log-to-angular"} event
+ * @param {any} data
+ */
 function emitEventToApp(event, data) {
   mainWindow.webContents.send(event, data);
 }
 
 function logToApp(message) {
   console.info(message);
-  emitEventToApp("log-to-angular", { message }); // Send log to Angular
+  emitEventToApp("log-to-angular", { message });
   return message;
 }
 
@@ -175,7 +192,6 @@ app.on("activate", () => {
 
 /**
  * Dev tool
- * TODO: Disable in production
  */
 app.whenReady().then(() => {
   globalShortcut.register("CommandOrControl+Shift+I", () => {
@@ -190,7 +206,7 @@ app.whenReady().then(() => {
   });
 });
 
-// --------------- Client Folder ----------------
+// --------------- START:Client Folder Management ----------------
 
 function createClientFolder(clientName) {
   const baseFolder = path.join(app.getPath("userData"), "clients");
@@ -217,9 +233,9 @@ function selectDirectory() {
   });
 
   if (result && result.length > 0) {
-    return result[0]; // Return the selected directory path
+    return result[0];
   } else {
-    return null; // No directory selected
+    return null;
   }
 }
 
@@ -309,16 +325,18 @@ ipcMain.handle("client-folder:delete", (_event, folderPath) => {
   return deleteClientFolder(folderPath);
 });
 
-// --------------- Menu --------------------
+// ---------------- END: Client Folder Management -------------
+
+// --------------- Start: App Menu --------------------
 
 const template = [
   {
     label: "Main",
     submenu: [
       {
-        label: "Menu 1",
+        label: "Scanner",
         click: () => {
-          logToApp("Menu 1 clicked");
+          emitEventToApp("route-change", "/dwt");
         },
       },
       {
@@ -333,20 +351,38 @@ const template = [
     label: "Other Menu",
     submenu: [
       {
-        label: "Test Menu 1",
+        label: "Error Box",
         click: () => {
-          logToApp("Test Menu 1 clicked");
+          dialog
+            .showMessageBox(mainWindow, {
+              type: "error",
+              title: "Test Dialogue Error",
+              message: "Something is wrong. Try it again",
+              buttons: ["Okay", "Cancel"],
+            })
+            .then((result) => {
+              const { response } = result;
+
+              if (response === 0) {
+                logToApp("User clicked Okay, trying again...");
+              } else {
+                logToApp("User clicked Cancel, stopped...");
+              }
+            })
+            .catch((err) => {
+              logToApp("Error showing message box: ", err);
+            });
         },
       },
       {
-        label: "Test Menu 2",
+        label: "Info",
         click: () => {
           dialog
             .showMessageBox(mainWindow, {
               type: "info",
-              title: "Test Dialogue",
-              message: "Something is wrong. Try it again",
-              buttons: ["Okay", "Cancel"],
+              title: "Test Dialogue Info",
+              message: "Something info. Please confirm",
+              buttons: ["Confirm", "Cancel"],
             })
             .then((result) => {
               const { response } = result;
@@ -358,7 +394,7 @@ const template = [
               }
             })
             .catch((err) => {
-              console.error("Error showing message box: ", err);
+              logToApp("Error showing message box: ", err);
             });
         },
       },
@@ -368,3 +404,5 @@ const template = [
 
 const menu = Menu.buildFromTemplate(template);
 Menu.setApplicationMenu(menu);
+
+// --------------- END: App Menu --------------------
