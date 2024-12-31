@@ -1,18 +1,28 @@
-const { app, Menu, BrowserWindow, ipcMain, dialog } = require("electron");
+const {
+  app,
+  Menu,
+  BrowserWindow,
+  ipcMain,
+  dialog,
+  globalShortcut,
+} = require("electron");
 const path = require("path");
 const fs = require("fs");
 const os = require("os");
 const { autoUpdater } = require("electron-updater");
+require("dotenv").config();
 
 let mainWindow;
 
-const isDev = process.env.NODE_ENV === "development" || !app.isPackaged;
+const isDev = process.env.NODE_ENV === "development" && !app.isPackaged;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
+    icon: path.join(__dirname, "public/assets/logo.ico"), // Path to your logo
     webPreferences: {
+      /** Set the path of an additional "preload" script that will be used to communicate between node-land and browser-land. */
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: false,
       contextIsolation: true, // Enable contextIsolation for security
@@ -29,10 +39,13 @@ function createWindow() {
   }
 }
 
-// ------------------  Listen for a message from the renderer process (Angular) --------------------------------
+// ---------------  Listen for a message from the renderer process (Angular) ---------------
 
 ipcMain.handle("get-app-version", () => {
   logToApp("Getting version information");
+  logToApp(`Environment, ${process.env.NODE_ENV}`);
+  logToApp(`Token, ${process.env.GITLAB_TOKEN}`); // TODO: remove
+
   return app.getVersion();
 });
 
@@ -49,16 +62,6 @@ ipcMain.handle("get-os-info", () => {
 });
 
 /**
- * Open folder dialog when requested
- */
-ipcMain.handle("dialog:open-folder", () => {
-  const result = dialog.showOpenDialog(mainWindow, {
-    properties: ["openDirectory"],
-  });
-  return result.filePaths[0];
-});
-
-/**
  * @description
  *
  * Check for updates
@@ -68,51 +71,45 @@ ipcMain.handle("dialog:open-folder", () => {
  */
 function checkForUpdates() {
   autoUpdater.requestHeaders = {
-    "PRIVATE-TOKEN": "glpat-PNTkPEEe2wVtDs4uHN9s",
+    "PRIVATE-TOKEN": process.env.GITLAB_TOKEN || "glpat-PNTkPEEe2wVtDs4uHN9s", // FIXME:
   };
-
   autoUpdater.setFeedURL({
     provider: "generic",
     url: "https://gitlab.com/api/v4/projects/65720678/jobs/artifacts/master/raw/dist?job=build",
   });
 
-  autoUpdater.forceDevUpdateConfig = true;
+  autoUpdater.forceDevUpdateConfig = os.type() !== "Darwin";
   autoUpdater.autoDownload = false;
 
   autoUpdater.checkForUpdates();
 
   autoUpdater.on("update-available", (info) => {
-    logToApp("update-available", info);
+    logToApp("Update available", info);
+
     dialog
       .showMessageBox(mainWindow, {
         type: "info",
         title: "Update Available",
-        message: "An update is available. It will be downloaded and installed.",
+        message:
+          "A new update is available and will be downloaded and installed.",
         buttons: ["Download", "Cancel"],
       })
       .then((result) => {
         const { response } = result;
 
         if (response === 0) {
-          logToApp("User clicked Install, starting the update...");
+          logToApp("User selected 'Download'. Starting the update process...");
           autoUpdater.downloadUpdate();
         } else {
-          logToApp("User clicked Cancel, update will not proceed.");
+          logToApp("User selected 'Cancel'. Update process will not proceed.");
         }
       })
       .catch((err) => {
-        console.error("Error showing message box: ", err);
+        console.error(
+          "An error occurred while displaying the download message box:",
+          err
+        );
       });
-  });
-
-  autoUpdater.on("update-not-available", () => {
-    logToApp("update-not-available");
-
-    dialog.showMessageBox(mainWindow, {
-      type: "info",
-      title: "No Updates",
-      message: "You are using the latest version.",
-    });
   });
 
   autoUpdater.on("download-progress", (progressObj) => {
@@ -157,7 +154,7 @@ function checkForUpdates() {
 
 /**
  * Handle to emit events to angular
- * @param {"route-change"|"download-progress"|"log-to-angular"} event
+ * @param {"route-change" | "download-progress" | "log-to-angular"} event
  * @param {any} data
  */
 function emitEventToApp(event, data) {
@@ -207,6 +204,16 @@ app.whenReady().then(() => {
 });
 
 // --------------- START:Client Folder Management ----------------
+
+/**
+ * Open folder dialog when requested
+ */
+ipcMain.handle("dialog:open-folder", () => {
+  const result = dialog.showOpenDialog(mainWindow, {
+    properties: ["openDirectory"],
+  });
+  return result.filePaths[0];
+});
 
 function createClientFolder(clientName) {
   const baseFolder = path.join(app.getPath("userData"), "clients");
@@ -288,7 +295,6 @@ function deleteClientFolder(clientName) {
     title: "Confirm Deletion",
     message: `Are you sure you want to delete the folder "${folderPath}"? This action cannot be undone.`,
     buttons: ["Yes", "No"],
-    defaultId: 1, // Default to "No"
   });
 
   if (result === 0) {
@@ -301,33 +307,37 @@ function deleteClientFolder(clientName) {
       );
     }
   } else {
-    return logToApp(`Folder deletion canceled.`);
+    return logToApp("Folder deletion canceled.");
   }
 }
 
 ipcMain.handle("client-folder:create", (_event, clientName) => {
   logToApp("Create client folder");
+
   return createClientFolder(clientName);
 });
 
 ipcMain.handle("client-folder:view", () => {
-  logToApp("view client folder");
+  logToApp("View client folder");
+
   return viewClientFolders();
 });
 
 ipcMain.handle("client-folder:select-and-create", (_event, clientName) => {
   logToApp(`Select and create client folder for ${clientName}`);
+
   return createClientFolderInSelectedDirectory(clientName);
 });
 
 ipcMain.handle("client-folder:delete", (_event, folderPath) => {
   logToApp(`Delete client folder: ${folderPath}`);
+
   return deleteClientFolder(folderPath);
 });
 
-// ---------------- END: Client Folder Management -------------
+// ---------------- END: Client Folder Management ----------------
 
-// --------------- Start: App Menu --------------------
+// ---------------- Start: App Menu ----------------
 
 const template = [
   {
@@ -342,6 +352,16 @@ const template = [
       {
         label: "Check for updates",
         click: () => {
+          autoUpdater.on("update-not-available", () => {
+            logToApp("Update not available");
+
+            dialog.showMessageBox(mainWindow, {
+              type: "info",
+              title: "No Updates",
+              message:
+                "You are already using the latest version of the application.",
+            });
+          });
           autoUpdater.checkForUpdates();
         },
       },
@@ -405,4 +425,4 @@ const template = [
 const menu = Menu.buildFromTemplate(template);
 Menu.setApplicationMenu(menu);
 
-// --------------- END: App Menu --------------------
+// ---------------- END: App Menu ----------------

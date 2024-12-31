@@ -1,7 +1,5 @@
-/* eslint-disable*/
-
 import { Component } from '@angular/core';
-import { ElectronService, FolderService } from '@shared/services';
+import { ElectronService } from '@shared/services';
 import { ForceAny } from '@shared/typescript/utility.types';
 
 @Component({

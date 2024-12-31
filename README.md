@@ -92,17 +92,17 @@ npm run electron
 
 ### Building Electron for Distribution
 
-To build the Electron application for distribution, use:
+To build the Electron application for distribution for window system, use:
 
 ```bash
 npm run electron:build
 ```
 
-This will generate platform-specific installers.
+This will generate windows-specific installers.
 
 ### Publishing Electron Application
 
-To publish the Electron application, use:
+To build and publish the Electron application for window system, use:
 
 ```bash
 npm run electron:publish
@@ -112,10 +112,24 @@ npm run electron:publish
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
 
+Here are some resources to help you learn more about Electron and enhance your application's capabilities:
+
+1. **[Official Electron Documentation](https://www.electronjs.org/docs/latest)**  
+   Comprehensive guide covering Electron's API, features, and best practices.
+
+2. **[Electron Packager](https://github.com/electron/electron-packager)**  
+   A command-line tool to package and distribute Electron applications.
+
+3. **[Electron Builder](https://www.electron.build/)**  
+   A complete solution to package and build a distributable application.
+
 ## Project Folder Structure
 
 ```
 src/
+├── angular/
+├── dist/
+└── public/
 ├── features/ # Feature modules outside app
 │   ├── dashboard/
 │   │   ├── components/
@@ -179,5 +193,168 @@ src/
 ├── environments/
 │   ├── environment.ts
 │   └── environment.prod.ts
-└── styles.scss
+├── styles.scss
+├── main.js
+├── preload.js
+├── package.json
 ```
+
+## Features
+
+### General Features
+
+- Electron-based desktop application with Angular frontend.
+- Auto-updater integrated with GitLab for streamlined update distribution.
+- Secure IPC communication using Electron's `contextBridge`.
+- Integrated menu options for application management.
+
+### Client Folder Management
+
+- Create and manage client-specific folders locally.
+- View all client folders.
+- Select a directory to create client folders.
+- Delete client folders with confirmation dialogs.
+
+### Update Management
+
+- Check for application updates.
+- Notify users about update availability and progress.
+- Auto-install updates with user confirmation.
+
+### Application Menu
+
+- Access to scanner features.
+- Dialog options for error and informational messages.
+
+---
+
+## Setup and Installation
+
+### Prerequisites
+
+- Node.js (>= 16.x)
+- npm (>= 8.x)
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://gitlab.com/FLYdocs-Dev/TechUpgrade/frontend/fscc.git
+   cd fscc
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables:
+   Create a `.env` file in the root directory and configure it as follows:
+
+   ```env
+   NODE_ENV=development
+   GITLAB_TOKEN=<your-gitlab-token>
+   ```
+
+4. Run the application in development mode:
+
+   ```bash
+   npm run electron:dev
+   ```
+
+5. Build the application for production:
+
+   ```bash
+   npm run electron:build:default
+   ```
+
+   Running this command will generate a package tailored to the operating system where the command is executed, allowing you to test the build locally.
+
+---
+
+## Key Files and Their Roles
+
+### `main.js`
+
+The main process script that handles:
+
+- Application lifecycle events.
+- Window creation.
+- Auto-update functionality.
+- IPC communication with the renderer process.
+
+### `preload.js`
+
+The preload script that securely bridges communication between the renderer process (Angular) and Electron's main process.
+
+---
+
+## IPC Events
+
+### Renderer to Main
+
+- `get-app-version`: Retrieves the application version.
+- `get-os-info`: Retrieves operating system information.
+- Folder management events:
+  - `client-folder:create`
+  - `client-folder:view`
+  - `client-folder:select-and-create`
+  - `client-folder:delete`
+
+### Main to Renderer
+
+- `log-to-angular`: Logs messages from the main process.
+- `download-progress`: Sends update download progress.
+- `route-change`: Notifies route changes.
+
+---
+
+## Deployment
+
+### Building for Production
+
+To build the application for deployment, run:
+
+```bash
+npm run electron:build
+```
+
+This will create a distributable window package in the `dist` directory.
+
+### Auto-Updater Configuration
+
+Ensure the following is correctly set up in `package.json`:
+
+```json
+"build": {
+  "appId": "com.fscc.app",
+  "publish": [
+    {
+      "provider": "generic",
+      "url": "https://gitlab.com/api/v4/projects/{project-id}/jobs/artifacts/{branch}/raw/dist?job=build"
+    }
+  ]
+}
+```
+
+- `project-id`: Replace this with your GitLab project ID (e.g., 65769590).
+- `branch`: Replace this with the branch you are deploying (e.g., dev, uat, prod).
+
+Project ID information is available in the General Information section of your GitLab project.
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+- **Update Errors**: Ensure `GITLAB_TOKEN` is correctly configured in the `.env` file.
+- **Folder Management Errors**: Verify folder permissions and paths.
+
+### Logs
+
+Logs are displayed in the console and can also be accessed through the Angular application.
+
+---

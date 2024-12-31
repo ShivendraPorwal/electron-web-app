@@ -1,5 +1,3 @@
-/* eslint-disable*/
-
 import { Component } from '@angular/core';
 import { ElectronService, FolderService } from '@shared/services';
 
@@ -13,7 +11,7 @@ export class FileExplorerComponent {
   clientName = '';
   message = '';
   folders: string[] = [];
-  selectedFolder: string = '';
+  selectedFolder = '';
 
   constructor(
     private folderService: FolderService,
@@ -23,16 +21,18 @@ export class FileExplorerComponent {
 
   createFolder() {
     if (this.clientName.trim()) {
-      this.folderService.createClientFolder(this.clientName).then((msg) => {
-        this.message = msg;
-        this.fetchFolders();
-      });
+      void this.folderService
+        .createClientFolder(this.clientName)
+        .then((msg) => {
+          this.message = msg;
+          this.fetchFolders();
+        });
     }
   }
 
   selectAndCreateFolder() {
     if (this.clientName.trim()) {
-      this.folderService
+      void this.folderService
         .selectAndCreateClientFolder(this.clientName)
         .then((msg) => {
           this.message = msg;
@@ -46,7 +46,7 @@ export class FileExplorerComponent {
       const clientName = clientPath.substring(
         clientPath.lastIndexOf(type === 'Darwin' ? '/' : '\\') + 1
       );
-      this.folderService.deleteClientFolder(clientName).then((msg) => {
+      void this.folderService.deleteClientFolder(clientName).then((msg) => {
         this.message = msg;
         this.fetchFolders();
       });
@@ -65,7 +65,7 @@ export class FileExplorerComponent {
   }
 
   fetchFolders() {
-    this.folderService.viewClientFolders().then((folders) => {
+    void this.folderService.viewClientFolders().then((folders) => {
       this.folders = folders;
     });
   }

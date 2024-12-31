@@ -1,5 +1,3 @@
-/* eslint-disable*/
-
 import { Component } from '@angular/core';
 import { ElectronService } from '@shared/services';
 
@@ -10,10 +8,10 @@ import { ElectronService } from '@shared/services';
   standalone: false,
 })
 export class DownloadProgressComponent {
-  downloadProgress: number = 0;
-  transferred: number = 0;
-  total: number = 0;
-  speed: number = 0;
+  downloadProgress = 0;
+  transferred = 0;
+  total = 0;
+  speed = 0;
 
   constructor(private electronService: ElectronService) {}
 
