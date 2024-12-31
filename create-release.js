@@ -43,6 +43,14 @@ function updatePackageJson(newVersion) {
   console.log(`Updated package.json version to ${newVersion}`);
 }
 
+// Function to commit the version update
+function commitVersionUpdate(newVersion) {
+  console.log(`Committing version update: ${newVersion}`);
+  execSync("git add package.json");
+  execSync(`git commit -m "chore: update version to ${newVersion}"`);
+  execSync("git push");
+}
+
 // Function to create a Git tag and push it
 function createGitTag(newVersion) {
   console.log(`Creating and pushing Git tag: v${newVersion}`);
@@ -58,7 +66,8 @@ function askVersionUpdate(currentVersion) {
       if (["major", "minor", "patch"].includes(answer)) {
         const newVersion = updateVersion(answer, currentVersion);
         updatePackageJson(newVersion);
-        createGitTag(newVersion);
+        commitVersionUpdate(newVersion); // Commit the version change
+        createGitTag(newVersion); // Create and push the tag
         rl.close();
       } else {
         console.log(
