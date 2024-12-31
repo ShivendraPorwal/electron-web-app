@@ -1,0 +1,2 @@
+provider: generic
+url: https://gitlab.com/api/v4/projects/65769590/jobs/artifacts/master/raw/dist?job=build

@@ -1,6 +1,9 @@
 {
-  "name": "electron-angular-app",
-  "version": "0.0.0",
+  "name": "fscc-app",
+  "productName": "fscc-app",
+  "description": "FSCC Application for managing tasks.",
+  "author": "FlyDocs",
+  "version": "0.0.1",
   "main": "main.js",
   "scripts": {
     "ng": "ng",
@@ -12,16 +15,22 @@
     "lint:fix": "eslint . --fix --ext .js,.ts",
     "electron": "ng build && electron .",
     "electron:dev": "concurrently \"npm run start\" \"wait-on http://localhost:4200 && electronmon .\"",
-    "electron:publish": "npm run build && electron-builder --publish always",
-    "electron:build": "npm run build && electron-builder"
+    "electron:build": "npm run build && electron-builder --win --publish never",
+    "electron:build:mac": "npm run build && electron-builder --mac --publish never",
+    "electron:publish": "npm run build && electron-builder --win --publish always"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/test7664601/fscc.git",
+    "release": "latest"
   },
   "build": {
-    "appId": "com.example.angular-electron",
+    "appId": "com.fscc.app",
+    "artifactName": "${productName}-${version}.${ext}",
     "publish": [
       {
-        "provider": "github",
-        "owner": "ShivendraPorwal",
-        "repo": "electron-web-app"
+        "provider": "generic",
+        "url": "https://gitlab.com/api/v4/projects/65769590/jobs/artifacts/master/raw/dist?job=build"
       }
     ],
     "files": [
@@ -30,7 +39,10 @@
       "preload.js"
     ],
     "win": {
-      "target": "nsis"
+      "target": [
+        "nsis"
+      ],
+      "verifyUpdateCodeSignature": false
     }
   },
   "private": true,

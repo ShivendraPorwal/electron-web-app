@@ -23,7 +23,7 @@ function createWindow() {
     mainWindow.webContents.openDevTools(); // Open DevTools in development mode
   } else {
     mainWindow.loadFile(
-      path.join(__dirname, "dist/electron-angular-app/browser/index.html") // Angular build file path
+      path.join(__dirname, "dist/fscc-app/browser/index.html") // Angular build file path
     );
   }
 }
@@ -53,13 +53,24 @@ ipcMain.handle("dialog:open-folder", async () => {
 function checkForUpdates() {
   // autoUpdater.setFeedURL({ url: feedURL });
   // autoUpdater.checkForUpdates();
+  autoUpdater.requestHeaders = {
+    "PRIVATE-TOKEN": "glpat-XRN6stw32wi7t8axL26y",
+  };
+
+  autoUpdater.setFeedURL({
+    provider: "generic",
+    url: "https://gitlab.com/api/v4/projects/65769590/jobs/artifacts/master/raw/dist?job=build",
+  });
+
+  autoUpdater.forceDevUpdateConfig = true;
+  autoUpdater.autoDownload = false
 
   // Check for updates
-  autoUpdater.checkForUpdatesAndNotify();
+  autoUpdater.checkForUpdates();
 
   // Handle the 'update-available' event
-  autoUpdater.on("update-available", () => {
-    logToApp("update-available");
+  autoUpdater.on("update-available", (info) => {
+    logToApp("update-available",info);
     dialog
       .showMessageBox(mainWindow, {
         type: "info",
