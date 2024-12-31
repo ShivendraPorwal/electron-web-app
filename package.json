@@ -3,7 +3,7 @@
   "productName": "fscc-app",
   "description": "FSCC Application for managing tasks.",
   "author": "FlyDocs",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "main": "main.js",
   "scripts": {
     "ng": "ng",
