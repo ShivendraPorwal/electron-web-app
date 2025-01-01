@@ -6,9 +6,9 @@ stages:
 
 check-version:
   stage: Check
-  image: node:16 # Use a Node.js image
+  image: node:16
   script:
-    - apt-get update && apt-get install -y jq # Ensure jq is available
+    - apt-get update && apt-get install -y jq
     - export PREVIOUS_VERSION=$(git show HEAD~1:package.json | jq -r '.version')
     - export CURRENT_VERSION=$(jq -r '.version' package.json)
     - |
@@ -50,6 +50,7 @@ variables:
 upload:
   stage: Upload
   needs:
+    - job: check-version
     - job: build
       artifacts: true
   rules:
@@ -61,6 +62,7 @@ upload:
 auto-release-master:
   image: registry.gitlab.com/gitlab-org/release-cli
   needs:
+    - job: check-version
     - job: build
       artifacts: true
     - job: upload
