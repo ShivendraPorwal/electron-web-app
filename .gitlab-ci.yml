@@ -50,24 +50,21 @@ variables:
 upload:
   stage: Upload
   needs:
-    - job: check-version
-    - job: build
-      artifacts: true
+    - check-version
+    - build
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
   when: always
   script:
     - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "./dist/${WIN_BINARY}" "${PACKAGE_REGISTRY_URL}/${WIN_BINARY}"'
 
-auto-release-master:
+auto-release:
+  stage: Release
   image: registry.gitlab.com/gitlab-org/release-cli
   needs:
-    - job: check-version
-    - job: build
-      artifacts: true
-    - job: upload
-      artifacts: true
-  stage: Release
+    - check-version
+    - build
+    - upload
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
   when: always
