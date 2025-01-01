@@ -45,7 +45,7 @@ build:
   needs:
     - check-version
   only:
-    - master # Run only on push to master
+    - master
 
 variables:
   WIN_BINARY: "${APPNAME}-${VERSION}.exe"
@@ -58,7 +58,7 @@ upload:
     - build
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
-  when: always
+  when: on_success # Only run if previous jobs are successful
   script:
     - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "./dist/${WIN_BINARY}" "${PACKAGE_REGISTRY_URL}/${WIN_BINARY}"'
 
@@ -71,7 +71,7 @@ auto-release:
     - upload
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
-  when: always
+  when: on_success # Only run if previous jobs are successful
   script:
     - echo "Release $VERSION"
     - |
