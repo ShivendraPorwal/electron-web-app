@@ -48,6 +48,8 @@ function createWindow() {
 // ---------------  Listen for a message from the renderer process (Angular) ---------------
 
 ipcMain.handle("get-app-version", () => {
+  logToApp({ title: "resourcesPath", message: process.resourcesPath }); // TODO: remove
+  logToApp({ title: "cwd", message: process.cwd() });
   logToApp("Getting version information");
   logToApp(`Environment, ${process.env.NODE_ENV}`);
   logToApp(`Token, ${process.env.GITLAB_TOKEN}`); // TODO: remove

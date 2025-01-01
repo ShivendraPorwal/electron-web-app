@@ -39,7 +39,7 @@
       "dist/**/*",
       "main.js",
       "preload.js",
-      ".env"
+      "./.env"
     ],
     "win": {
       "target": [
