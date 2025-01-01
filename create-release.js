@@ -2,19 +2,28 @@ const fs = require("fs");
 const { execSync } = require("child_process");
 const readline = require("readline");
 
-// Create readline interface to ask for user input
+/**
+ * Readline interface to ask for user input
+ */
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
-// Function to get the current version from package.json
+/**
+ * Function to get the current version from package.json
+ */
 function getCurrentVersion() {
   const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf8"));
   return packageJson.version;
 }
 
-// Function to update version based on the user input
+/**
+ * Function to update version based on the user input
+ * @param {"major" | "minor" | "patch"} versionType
+ * @param {`${number}.${number}.${number}`} currentVersion
+ * @returns Updated version
+ */
 function updateVersion(versionType, currentVersion) {
   const versionParts = currentVersion.split(".").map(Number);
 
@@ -34,7 +43,10 @@ function updateVersion(versionType, currentVersion) {
   return newVersion;
 }
 
-// Function to update the version in package.json
+/**
+ * Function to update the version in package.json
+ * @param {`${number}.${number}.${number}`} newVersion New updated version
+ */
 function updatePackageJson(newVersion) {
   const packageJsonPath = "./package.json";
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
@@ -43,7 +55,13 @@ function updatePackageJson(newVersion) {
   console.log(`Updated package.json version to ${newVersion}`);
 }
 
-// Function to commit the version update
+/**
+ * Function to commit the version update
+ * @description
+ * This function will add the package.json file to the staging area,
+ * commit the changes with a message, and push the changes to the remote repository.
+ * which will trigger the CI/CD pipeline to create a release.
+ */
 function commitVersionUpdate(newVersion) {
   console.log(`Committing version update: ${newVersion}`);
   execSync("git add package.json");
@@ -51,14 +69,9 @@ function commitVersionUpdate(newVersion) {
   execSync("git push");
 }
 
-// Function to create a Git tag and push it
-function createGitTag(newVersion) {
-  console.log(`Creating and pushing Git tag: v${newVersion}`);
-  execSync(`git tag v${newVersion}`);
-  execSync("git push origin --tags");
-}
-
-// Prompt the user for the version update type
+/**
+ * Prompt the user for the version update type
+ */
 function askVersionUpdate(currentVersion) {
   rl.question(
     `Current version is ${currentVersion}. Do you want to update the version to (major, minor, patch)? `,
@@ -67,7 +80,6 @@ function askVersionUpdate(currentVersion) {
         const newVersion = updateVersion(answer, currentVersion);
         updatePackageJson(newVersion);
         commitVersionUpdate(newVersion); // Commit the version change
-        createGitTag(newVersion); // Create and push the tag
         rl.close();
       } else {
         console.log(

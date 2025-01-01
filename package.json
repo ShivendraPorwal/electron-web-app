@@ -19,7 +19,7 @@
     "electron:build:default": "npm run build && electron-builder --publish never",
     "electron:build:mac": "npm run build && electron-builder --mac --publish never",
     "electron:publish": "npm run build && electron-builder --win --publish always",
-    "create-release": "node create-release.js"
+    "release": "node create-release.js"
   },
   "repository": {
     "type": "git",
