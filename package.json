@@ -35,11 +35,13 @@
         "url": "https://gitlab.com/api/v4/projects/65720678/jobs/artifacts/master/raw/dist?job=build"
       }
     ],
+    "extraResources": [
+      ".env"
+    ],
     "files": [
       "dist/**/*",
       "main.js",
-      "preload.js",
-      "./.env"
+      "preload.js"
     ],
     "win": {
       "target": [

@@ -12,10 +12,9 @@ const os = require("os");
 const { autoUpdater } = require("electron-updater");
 
 require("dotenv").config({
-  // FIXME: not working in build
   path: app.isPackaged
-    ? path.join(process.resourcesPath, ".env")
-    : path.resolve(process.cwd(), ".env"),
+    ? path.join(process.resourcesPath, ".env")  
+    : path.resolve(process.cwd(), ".env"),  
 });
 
 let mainWindow;
