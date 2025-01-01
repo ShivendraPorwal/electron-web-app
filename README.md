@@ -72,7 +72,7 @@ npm run lint:fix
 
 ## Electron Integration
 
-### Starting Electron in Development Mode
+### Starting Electron with Angular server in Development Mode
 
 To run the application in Electron with a live development server, use:
 
@@ -84,11 +84,13 @@ This command concurrently runs the Angular development server and starts Electro
 
 ### Building and Running Electron
 
-To build the Angular project and start Electron, use:
+To start watch server of electron, use:
 
 ```bash
 npm run electron
 ```
+
+This will watch on `http://localhost:4200` and load the web if local server is running on the 4200 port
 
 ### Building Electron for Distribution
 
@@ -311,7 +313,21 @@ The preload script that securely bridges communication between the renderer proc
 
 ---
 
+Your updated README looks great! Here's the final version with the requested changes formatted for clarity:
+
+---
+
 ## Deployment
+
+### Automated via CI/CD
+
+To run a script to make a release, use the following command:
+
+```bash
+npm run release
+```
+
+To manage version updates of the Electron app, the `create-release.js` script is provided. This script will help automatically update the version in your `package.json` file. It will prompt you for the version type (major, minor, or patch), update the version in `package.json`, and commit the changes to Git. Once the version update is committed to the master branch, the pipeline will get triggered to create a release.
 
 ### Building for Production
 
@@ -321,11 +337,23 @@ To build the application for deployment, run:
 npm run electron:build
 ```
 
-This will create a distributable window package in the `dist` directory.
+The build process packages your Electron app into a distributable format `.exe` for Windows and prepares it for distribution.
+
+### Publish for Production
+
+To publish the application after building, use the following command:
+
+```bash
+npm run electron:publish
+```
+
+This process uploads the build to a server, GitHub/Gitlab releases, or another platform for distribution, making your app available for download.
 
 ### Auto-Updater Configuration
 
-Ensure the following is correctly set up in `package.json`:
+Ensure the following configurations are correctly set up in your `package.json` and `main.js`:
+
+#### package.json
 
 ```json
 "build": {
@@ -339,12 +367,28 @@ Ensure the following is correctly set up in `package.json`:
 }
 ```
 
+#### main.js
+
+```js
+autoUpdater.requestHeaders = {
+  "PRIVATE-TOKEN": GITLAB_TOKEN,
+};
+
+autoUpdater.setFeedURL({
+  provider: "generic",
+  url: "https://gitlab.com/api/v4/projects/{project-id}/jobs/artifacts/{branch}/raw/dist?job=build",
+});
+```
+
 - `project-id`: Replace this with your GitLab project ID (e.g., 65769590).
-- `branch`: Replace this with the branch you are deploying (e.g., dev, uat, prod).
+- `branch`: Replace this with the branch you are deploying (e.g., dev, uat, prod) - current is master.
+- `GITLAB_TOKEN`: GitLab token with at least read permission.
 
-Project ID information is available in the General Information section of your GitLab project.
+Project ID information can be found in the **General Information** section of your GitLab project.
 
----
+### Important Note
+
+All configurations and scripts provided above are set up for the `master` branch. If you are working with different versions (e.g., dev, uat, prod), you will need to configure the appropriate version-specific settings for each branch. Ensure that the project-id and branch in the package.json and main.js are updated accordingly to reflect the correct environment.
 
 ## Troubleshooting
 
@@ -356,5 +400,7 @@ Project ID information is available in the General Information section of your G
 ### Logs
 
 Logs are displayed in the console and can also be accessed through the Angular application.
+
+This should be updated to push the log to server from client app.
 
 ---
